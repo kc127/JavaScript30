@@ -59,8 +59,38 @@
 
 <script>
 
+  /* keypress event handler */
+  const keyDown = (e) => {
+    // identify the audio element
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    // if no audio playing, return
+    if (!audio) {
+      return;
+    };
+    audio.currentTime = 0; // if we press same key twice, it restarts immediately
+    audio.play();
+    // add class playing to key element
+    key.classList.add('playing');
+  }
+
+  /* removeTransition event handler */
+  const removeTransition = (e) => {
+    // if event is not transform, skip it
+    if(e.propertyName !== "transform") {
+      return;
+    }
+    // remove class playing from key's classlist
+    e.target.classList.remove("playing");
+  }
+
+  /* add an event listener to listen for a key press */
+  window.addEventListener('keydown', keyDown)
+
+  /* listen to an event on every single key so that we can remove the transition when the transition ends */
+  const keys = document.querySelectorAll('.key');
+  // add an event listener to each key to listen to transitionend event
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 </script>
-
-
 </body>
 </html>
